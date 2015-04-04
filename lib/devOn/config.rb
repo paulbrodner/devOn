@@ -1,4 +1,4 @@
-module DevOn
+module DevOn 
   require 'confstruct'
   module Config
     #

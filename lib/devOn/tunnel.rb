@@ -1,5 +1,7 @@
 module DevOn
   require 'net/ssh'
+  require 'net/sftp'
+
   class Tunnel
     #
     # Creates a Tunnel connection and execute custom commands
@@ -8,8 +10,8 @@ module DevOn
     attr_accessor :user
     attr_accessor :port
     attr_reader :key_data
-    attr_reader :verbose
-   
+    attr_accessor :verbose
+    attr_accessor :logger
     def initialize(config)
       #
       # configure connection based on Config provided
@@ -18,7 +20,7 @@ module DevOn
       @user = config[:user]
       @port = config[:port]
       @verbose = config[:verbose] || :info
-      
+
       raise Exception, "Hostname should be provided" if @hostname.nil?
       raise Exception, "User should be provided" if @user.nil?
 
@@ -27,15 +29,16 @@ module DevOn
         puts "Connecting #{@user}@#{@hostname}:#{@port} using Key Data: #{config[:key_data]}"
         @key_data = File.read(config[:key_data])
       end
-       
+
     end
 
     def on_shh
       if @key_data
-        Net::SSH.start(@hostname, @user, :port=> @port, :key_data => @key_data, :verbose=>(@verbose) ) do |ssh|
-          yield ssh
+        Net::SSH.start(@hostname, @user, :port=> @port, :key_data => @key_data, :verbose=>(@verbose) ) do |session|
+          @logger = session.logger
+          yield session
         end
       end
-    end
+    end  
   end
 end

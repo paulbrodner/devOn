@@ -2,6 +2,8 @@ require 'erb'
 
 module DevOn
   module Template
+    require 'tempfile'
+
     def self.from_string(string)
       ERB.new(string).result(binding)
     end
@@ -11,18 +13,13 @@ module DevOn
       ERB.new(File.read(file)).result(binding)
     end
 
-    module Helper
-      #
-      # Helper injected in DevOn module
-      #
-      def apply_template(config, template, destination)
-        puts "Using template: #{template} for #{destination}"
-
-        config.add_templates!({
-          :file=> Template.from_file(template),
-          :destination=>destination}
-        )
-      end
+    # return a temporary file created using the template
+    def self.tmp_file(file)
+      tmp = Tempfile.new(File.basename(file))
+      tmp.write(Template.from_file(file))
+      tmp.rewind
+      puts "[TMP FILE] #{tmp.path}"
+      return tmp
     end
   end
 end
