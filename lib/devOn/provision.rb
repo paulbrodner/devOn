@@ -4,26 +4,22 @@ module DevOn
     # This will actually provision the VM machine using the configuration provided
     #
     def provision!(conection, config)
-      @tunnel = Tunnel.new(
-      {
-        :hostname => conection.hostname,
-        :user => conection.user,
-        :port => conection.port,
-        :key_data =>conection.key_data
-      }
-      )
+      @tunnel = Tunnel.new(conection.to_h)
 
       stdout = ""
       @sftp = nil
       @tunnel.on_shh do |session|
 
         config.commands.each do |cmd|
-
-          @sftp ||= session.sftp.connect
+          catch_sftp_exception do
+            @sftp ||= session.sftp.connect
+          end
 
           if cmd.type.eql? Command::UPLOAD_FILE
-            @sftp.upload!(cmd.value[:source], cmd.value[:destination], {:verbose=>@tunnel.verbose})
-            @tunnel.logger.info("[Uploaded file] #{cmd.value.inspect}")
+            catch_sftp_exception do
+              @sftp.upload!(cmd.value[:source], cmd.value[:destination], {:verbose=>@tunnel.verbose})
+              @tunnel.logger.info("[File UPLOADED] #{cmd.value.inspect}")
+            end
           end
 
           if cmd.type.eql? Command::SHELL
@@ -32,10 +28,16 @@ module DevOn
               stdout << data if stream == :stdout
             end
             puts "[SHELL OUTPUT]\n#{stdout}"
-          end
+          end        
         end
-
       end
+    end
+
+    private
+    def catch_sftp_exception(&block)
+      yield block
+    rescue Net::SFTP::StatusException => e
+      raise "Couldn't execute SFTP command: #{e.message}"
     end
   end
 end

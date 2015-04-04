@@ -26,8 +26,6 @@ require 'devOn'
 
 module Install
   include DevOn
-    #
-    # at this time, only connection with user and keydata is available
     Config.on "vagrant_machine" do
     connection do
       hostname "127.0.0.1"
