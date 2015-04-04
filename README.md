@@ -1,8 +1,6 @@
 # DevOn
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/devOn`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Throw some pixie dust on test environments !
+This gem will help you configure test environments: Vagrant files, Remote VMS, real servers based on configuration provided. More to come...
 
 ## Installation
 
@@ -22,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+TBD
 
 ## Development
 
