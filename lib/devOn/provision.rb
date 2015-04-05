@@ -1,5 +1,10 @@
 module DevOn
   module Provision
+    
+    def provision_on(config)
+      provision!(config.connection, config)
+    end
+    
     #
     # This will actually provision the VM machine using the configuration provided
     #

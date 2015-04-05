@@ -1,5 +1,4 @@
 require 'erb'
-
 module DevOn
   module Template
     require 'tempfile'

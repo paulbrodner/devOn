@@ -1,5 +1,4 @@
 module DevOn
-
   class Command
     SHELL = 1
     UPLOAD_FILE = 3
