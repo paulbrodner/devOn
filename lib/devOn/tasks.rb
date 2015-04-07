@@ -16,6 +16,11 @@ namespace :scripts do
   desc "Run script"
   task :run do
     require 'devOn'
+    all_connections = list "connections"
+    puts "Choose a connection to use:"
+    id_conn = STDIN.gets.chomp.to_i
+    ENV['connection'] = File.basename(all_connections[id_conn])
+    require File.expand_path(all_connections[id_conn])
 
     all_scripts = list "scripts"
     puts "Choose a script to run:"
@@ -26,7 +31,7 @@ namespace :scripts do
     id_config = STDIN.gets.chomp.to_i
     ENV["config"] = File.basename(all_configs[id_config],".rb")
 
-    return if not_continue? "I will run: [#{all_scripts[id_script]}] using [#{all_configs[id_config]}]. Continue?(y/n)"
+    return if not_continue? "I will run on[#{all_connections[id_conn]}] connection, script: [#{all_scripts[id_script]}] using [#{all_configs[id_config]}]. Continue?(y/n)"
 
     require File.expand_path(all_scripts[id_script])
   end
@@ -41,6 +46,13 @@ namespace :configs do
   desc "List available configurations"
   task :list do
     list "configs"
+  end
+end
+
+namespace :conn do
+  desc "List available connections"
+  task :list do
+    list "connections"
   end
 end
 
