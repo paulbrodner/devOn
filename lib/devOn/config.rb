@@ -1,5 +1,6 @@
-module DevOn 
+module DevOn
   require 'confstruct'
+
   module Config
     #
     # This is a wrapper class of confstruct gem
@@ -11,9 +12,8 @@ module DevOn
     #   property3 "3"
     # end
     # Configs.project.property2.test => will display 'test12'
-    #    
+    #
     extend self
-    
     def on(name, &block)
       class_variable_set "@@#{name}", Confstruct::Configuration.new
       self.class.instance_eval do
@@ -21,8 +21,17 @@ module DevOn
           class_variable_get "@@#{name}"
         end
       end
+      # if we have some configuration files then add those into an array
+
+      if File.exist?("configs/#{name}")
+        t = class_variable_get "@@#{name}"
+        t.files = Dir["configs/#{name}/**/*.*"]
+          
+      end
       class_variable_get("@@#{name}").instance_exec(&block)
+
       self.send("#{name}")
     end
+
   end
 end

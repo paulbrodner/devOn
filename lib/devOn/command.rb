@@ -15,13 +15,13 @@ module DevOn
       raise "Source file not found: #{file}" unless File.exist? file
       puts "Using file for upload: #{file}"
       file_name = File.basename(file)
-      
-      if file_name.include?(".erb.")
+
+      if file_name.include?(".erb")
         data = {:source => Template.tmp_file(file).path, :destination => destination}
       else
         data = {:source => file, :destination => destination}
       end
-      
+
       Command.add(config, Command::UPLOAD_FILE, data)
     end
 
@@ -43,6 +43,10 @@ module DevOn
       Command.add(config, Command::APPLY_TEMPLATE,temp_data)
     end
 
+    def to_h
+      @value.to_h
+    end
+
     private
 
     # use Command.add to create new commands in the list of configuration item
@@ -50,5 +54,6 @@ module DevOn
     def self.add(config, cmd_type, data)
       config.add_commands!(Command.new(cmd_type, data))
     end
+
   end
 end

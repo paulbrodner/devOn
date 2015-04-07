@@ -49,6 +49,8 @@ module Install
   Command.run_shell(Config.projectA, "ls -la /tmp")
   
   Command.upload_file(Config.projectA, "<source>/example.erb.rb", "/home/vagrant/test.rb")
+  
+  use_file(config, "custom-cache-context.xml") #will automaticaly ling "configs/projectA/custom-cache-context.xml" file
 end
 ```
 And provisioning (running the Commands defined above) remotely on the vm with:

@@ -1,4 +1,5 @@
 require 'erb'
+
 module DevOn
   module Template
     require 'tempfile'
@@ -14,11 +15,10 @@ module DevOn
 
     # return a temporary file created using the template
     def self.tmp_file(file)
-      tmp = Tempfile.new(File.basename(file))
-      tmp.write(Template.from_file(file))
-      tmp.rewind
-      puts "[TMP FILE] #{tmp.path}"
-      return tmp
+      f = File.open(File.join(Dir.tmpdir(),File.basename(file)), "w")
+      f.write(Template.from_file(file))
+      f.close
+      return f
     end
   end
 end
