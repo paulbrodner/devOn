@@ -16,6 +16,7 @@ module DevOn
     extend self
     def on(name, &block)
       class_variable_set "@@#{name}", Confstruct::Configuration.new
+	  
       self.class.instance_eval do
         define_method "#{name}" do
           class_variable_get "@@#{name}"
@@ -29,9 +30,10 @@ module DevOn
           
       end
       class_variable_get("@@#{name}").instance_exec(&block)
-
+	  self.send("#{name}").name = name
       self.send("#{name}")
     end
+
 
   end
 end
