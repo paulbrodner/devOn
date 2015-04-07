@@ -1,9 +1,5 @@
 module DevOn
   module Provision
-    def provision_on(config)
-      provision!(config.connection, config)
-    end
-
     def use_file(config, filename)
       raise "No configs files found for: #{config.inspect}" if  !config.files
       f = config.files.select{|f| f.include?(filename)}.first
@@ -14,13 +10,15 @@ module DevOn
     #
     # This will actually provision the VM machine using the configuration provided
     #
-    def provision!(conection, config)
+    def provision_on(config)
+      check_compatibility!(config)
+
       return if config.commands.nil?
 
-      @tunnel = Tunnel.new(conection.to_h)
+      @tunnel = Tunnel.new($connection.settings.to_h)
       @errors = []
 
-      stdout = ""
+      stdout = []
       @sftp = nil
       @tunnel.on_shh do |session|
         config.commands.each do |cmd|
@@ -30,23 +28,22 @@ module DevOn
 
           if cmd.type.eql? Command::UPLOAD_FILE
             catch_sftp_exception do
-              ap "Preparing SFTP Upload command:"
-              ap cmd.value
+              DevOn::print({:title=>"Preparing SFTP Upload",:value=> cmd.value})
               @sftp.upload!(cmd.value[:source], cmd.value[:destination], {:verbose=>@tunnel.verbose})
-              print("[File UPLOADED: #{cmd.value[:destination]}!")
-              print cmd.value
+              DevOn::print({:title=>"File Uploaded",:value=> cmd.value[:destination]})
             end
           end
 
           if cmd.type.eql? Command::SHELL
             catch_ssh_exception do
-              ap "Preparing SSH command:"
-              print cmd.to_h
+              DevOn::print({:title=>"Preparing SSH command",:value=> cmd.value})
               session.exec!(cmd.value) do |channel, stream, data|
-                stdout << data if stream == :stdout
+                if stream == :stdout
+                  arr = data.split("\n")
+                  stdout = arr.empty? ? data : arr
+                end
               end
-              ap "[SHELL OUTPUT]"
-              print stdout
+              DevOn::print({:title=>"[SHELL OUTPUT]",:output=> stdout})
             end
           end
         end
@@ -61,49 +58,30 @@ module DevOn
 
     private
 
-    def print(info)
-
-      ap info, options = {:indent=>4, :multiline=>true,
-        :color => {
-        :args       => :pale,
-        :array      => :white,
-        :bigdecimal => :blue,
-        :class      => :yellow,
-        :date       => :greenish,
-        :falseclass => :red,
-        :fixnum     => :blue,
-        :float      => :blue,
-        :hash       => :pale,
-        :keyword    => :cyan,
-        :method     => :purpleish,
-        :nilclass   => :red,
-        :rational   => :blue,
-        :string     => :yellowish,
-        :struct     => :pale,
-        :symbol     => :cyanish,
-        :time       => :greenish,
-        :trueclass  => :green,
-        :variable   => :cyanish
-        }
-      }
-    end
-
     def catch_sftp_exception(&block)
       yield block
     rescue Exception => e
       @errors.push(e.message)
-      print "SFTP ERRORS"
-      print @errors
-      raise e
+      DevOn::print "SFTP ERRORS"
+      DevOn::print @errors
+      raise e.backtrace
     end
 
     def catch_ssh_exception(&block)
       yield block
     rescue Exception => e
       @errors.push(e.message)
-      print "SSH ERRORS"
-      print @errors
-      raise e
+      DevOn::print "SSH ERRORS"
+      DevOn::print @errors
+      raise e.backtrace
+    end
+
+    def check_compatibility!(config)
+      return if  config.compatibility.nil?
+      unless config.compatibility.include?(ENV['scripts'])
+        DevOn::print({:error=>"Script '#{ENV['scripts']}' is not compatible in current configuration!", :solution=>"In configuration file, add:  Config.#{ENV['configs']}.add_compatibility!(#{ENV['scripts']})"})
+        exit
+      end
     end
   end
 end

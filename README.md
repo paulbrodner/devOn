@@ -55,7 +55,7 @@ end
 ```
 And provisioning (running the Commands defined above) remotely on the vm with:
 ```ruby
- provision!(Config.vagrant_machine.connection, Config.projectA)
+ provision_on(Config.projectA)
 ```
 
 ## Development

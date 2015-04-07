@@ -6,6 +6,27 @@ include Rake::DSL
 namespace :scripts do
   desc "Create a new script"
   task :new do
+    puts "What is the script name?(ex: install_41) :"
+    name = STDIN.gets.chomp
+    template=%"
+module #{name.capitalize}
+  include DevOn
+  # use gloabl variable of the current connection selected
+  # $connection.settings
+  # or of the current configuration
+  # $config.name
+  #
+  # Command.run_shell_file(\"install/test.sh\")
+  # Command.run_shell(\"ls -la /tmp\")
+  # Command.run_shell(\"rm -rf /tmp/fromFile\")
+  # Command.run_shell(\"ls -la /tmp\")
+  # Command.upload_file(\"<source>/example.erb.rb\", \"/home/vagrant/test.rb\")
+  #
+  # and provision the machine with:
+  # provision_on $config
+end
+  "
+    create_structure("scripts",name, template)
   end
 
   desc "List available scripts "
@@ -16,31 +37,60 @@ namespace :scripts do
   desc "Run script"
   task :run do
     require 'devOn'
-    all_connections = list "connections"
-    puts "Choose a connection to use:"
-    id_conn = STDIN.gets.chomp.to_i
-    ENV['connection'] = File.basename(all_connections[id_conn])
-    require File.expand_path(all_connections[id_conn])
 
-    all_scripts = list "scripts"
-    puts "Choose a script to run:"
-    id_script = STDIN.gets.chomp.to_i
+    script = interactive "scripts"
+    connection = interactive "connections"
 
-    all_configs = list "configs"
-    puts "Choose a configuration for the script:"
-    id_config = STDIN.gets.chomp.to_i
-    ENV["config"] = File.basename(all_configs[id_config],".rb")
+    require File.expand_path(connection)
 
-    return if not_continue? "I will run on[#{all_connections[id_conn]}] connection, script: [#{all_scripts[id_script]}] using [#{all_configs[id_config]}]. Continue?(y/n)"
+    config = interactive "configs"
 
-    require File.expand_path(all_scripts[id_script])
+    $connection = DevOn::Config.send(ENV['connections'])
+
+    exit if not_continue?(
+    {
+      :connection=>
+      {
+        :file =>connection,
+        :value=> $connection.settings
+      },
+      :script =>script,
+      :connfiguration => config
+    })
+
+    if ENV['configs']
+      require File.expand_path(config)
+      $config = DevOn::Config.send(ENV['configs'])
+    else
+      $config = DevOn::Config.on "default" do
+        name "default_config"
+      end
+    end
+
+    require File.expand_path(script)
   end
 end
 
 namespace :configs do
   desc "Create a new Configuration"
   task :new do
-    create_structure("configs")
+    puts "What is the configuration name?(ex: bm_node1) :"
+    name = STDIN.gets.chomp
+
+    template=%"
+module #{name.capitalize}
+  include DevOn
+
+  Config.on \"#{name}\" do
+    key1 do
+      a1 '1'
+      a2 '2'
+    end
+    key2 'key2'
+  end
+end
+  "
+    create_structure("configs",name, template)
   end
 
   desc "List available configurations"
@@ -60,42 +110,38 @@ private
 require 'fileutils'
 
 def list(folder)
-  ap "Available #{folder.capitalize}:"
   _folder = Dir["#{folder}/*.rb"]
-  ap _folder
+  return [] if _folder.empty?
+  DevOn::print "Available #{folder.capitalize}:"
+  DevOn::print _folder
   _folder
 end
 
-def create_structure(on)
-  puts "Configuration file name?(ex: amazon-test) :"
-  name = STDIN.gets.chomp
-
+def create_structure(on, name,template)
   config = File.join(on, name + ".rb")
-  raise "Configuration file #{File.expand_path(config)} already exists!" if File.exist?(config)
+  raise "File #{File.expand_path(config)} already exists!" if File.exist?(config)
 
   FileUtils.mkdir_p(File.join(on, name))
-  template=%"
-module #{name.capitalize}
-  include DevOn
 
-  Config.on \"#{name}\" do
-    connection do
-      hostname '127.0.0.1'
-      username '<change-me>'
-      password '<change-me>'
-      port 2222
-      #key_data 'configs/#{name}/private_key'
-    end
-    tmp '/tmp'
-  end
-end
-"
   File.write(config, template)
-  puts "Created structure for #{config}. Please update the file accordingly!"
+  puts "Created structure for #{config}!"
 end
 
 def not_continue?(message)
-  puts message
+  puts "\e[H\e[2J"
+  DevOn::print "Running the following settings:"
+  DevOn::print message
+  DevOn::print "Continue?(y/n):"
   r = STDIN.gets.chomp
   return r.downcase.eql?("n")
+end
+
+def interactive(folder)
+  all_files = list(folder)
+  return if all_files.empty?
+  puts "Choose a file from #{folder} to use:"
+  id_file = STDIN.gets.chomp.to_i || 0
+  file_path = all_files[id_file]
+  ENV[folder] =  File.basename(file_path, ".rb")
+  file_path
 end
