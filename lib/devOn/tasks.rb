@@ -2,11 +2,16 @@ require 'rake'
 require 'awesome_print'
 
 include Rake::DSL
+require 'devOn'
+ID_SCRIPTS = "scripts"
+ID_CONFIGS = "configs"
+ID_CONN = "connections"
+ID_NONE = "No config"
 
 namespace :scripts do
   desc "Create a new script"
   task :new do
-    puts "What is the script name?(ex: install_41) :"
+    puts "What is the script name?(ex: restart_tomcat) :"
     name = STDIN.gets.chomp
     template=%"
 module #{name.capitalize}
@@ -20,32 +25,33 @@ module #{name.capitalize}
   # Command.run_shell(\"ls -la /tmp\")
   # Command.run_shell(\"rm -rf /tmp/fromFile\")
   # Command.run_shell(\"ls -la /tmp\")
-  # Command.upload_file(\"<source>/example.erb.rb\", \"/home/vagrant/test.rb\")
+  # Command.upload_file(\"<source>/example.rb\", \"/home/vagrant/test.rb\")
+  # Command.upload_file(use_file($config, \"file.rb.erb\"), \"{$config.setting_from_config}/file.rb\")  
   #
   # and provision the machine with:
   # provision_on $config
 end
   "
-    create_structure("scripts",name, template)
+    create_structure(ID_SCRIPTS, name, template)
   end
 
   desc "List available scripts "
   task :list do
-    list "scripts"
+    list ID_SCRIPTS
   end
 
   desc "Run script"
   task :run do
-    require 'devOn'
+   
+    script = interactive ID_SCRIPTS
+    connection = interactive ID_CONN
 
-    script = interactive "scripts"
-    connection = interactive "connections"
-
+    config = interactive ID_CONFIGS
+    # load env.yml configuration
+    DevOn::EnvConfig.new(File.expand_path(ID_CONN+'/env.yml')).load(ENV[ID_CONN])
+      
     require File.expand_path(connection)
-
-    config = interactive "configs"
-
-    $connection = DevOn::Config.send(ENV['connections'])
+    $connection = DevOn::Config.send(ENV[ID_CONN])
 
     exit if not_continue?(
     {
@@ -58,9 +64,9 @@ end
       :connfiguration => config
     })
 
-    if ENV['configs']
+    if ENV[ID_CONFIGS] && ENV[ID_CONFIGS]!=ID_NONE
       require File.expand_path(config)
-      $config = DevOn::Config.send(ENV['configs'])
+      $config = DevOn::Config.send(ENV[ID_CONFIGS])
     else
       $config = DevOn::Config.on "default" do
         name "default_config"
@@ -90,34 +96,46 @@ module #{name.capitalize}
   end
 end
   "
-    create_structure("configs",name, template)
+    create_structure(ID_CONFIGS,name, template)
   end
 
   desc "List available configurations"
   task :list do
-    list "configs"
+    list ID_CONFIGS
   end
 end
 
 namespace :conn do
   desc "List available connections"
   task :list do
-    list "connections"
+    list ID_CONN
   end
 end
+
+task :help do
+  `rake -T`
+end
+
+task :default => [:help] 
 
 private
 require 'fileutils'
 
 def list(folder)
   _folder = Dir["#{folder}/*.rb"]
-  return [] if _folder.empty?
+  if folder.eql?ID_CONFIGS
+    _folder[0] = ID_NONE
+  else
+    return [] if _folder.empty?
+  end
+  
   DevOn::print "Available #{folder.capitalize}:"
   DevOn::print _folder
   _folder
 end
 
 def create_structure(on, name,template)
+  name = "test" if name.empty?
   config = File.join(on, name + ".rb")
   raise "File #{File.expand_path(config)} already exists!" if File.exist?(config)
 

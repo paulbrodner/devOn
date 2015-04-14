@@ -1,5 +1,6 @@
 require "devOn/version"
 require "awesome_print"
+require "devOn/env_config"
 require "devOn/command"
 require "devOn/config"
 require "devOn/template"
