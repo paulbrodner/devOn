@@ -1,7 +1,8 @@
 module DevOn
   module Provision
     def use_file(config, filename)
-      raise "No configs files found for: #{config.inspect}" if  !config.files
+      return if config.name.eql? "default"
+      raise "No configs files found for: #{config.name}" if  !config.files 
       f = config.files.select{|f| f.include?(filename)}.first
       raise "File #{filename} not found in configs folder of the script" if f.nil?
       f
