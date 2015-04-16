@@ -124,8 +124,10 @@ require 'fileutils'
 def list(folder)
   _folder = Dir["#{folder}/*.rb"]
   if folder.eql?ID_CONFIGS
-    _folder[0] = ID_NONE
+    _folder << ID_NONE
+    _folder.reverse!
   else
+    
     return [] if _folder.empty?
   end
   
