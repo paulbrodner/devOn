@@ -29,9 +29,10 @@ module DevOn
       raise Exception, "User should be provided" if @user.nil?
 
       if config[:key_data]
-        raise "Key Data not found: #{File.expand_path(config[:key_data])}" unless File.exist? config[:key_data]
-        puts "Connecting #{@user}@#{@hostname}:#{@port} using Key Data: #{config[:key_data]}"
-        @key_data = File.read(config[:key_data])
+        key_data_file = File.expand_path(config[:key_data])
+        raise "Key Data not found: #{key_data_file}" unless File.exist? key_data_file
+        puts "Connecting #{@user}@#{@hostname}:#{@port} using Key Data: #{key_data_file}"
+        @key_data = File.read(key_data_file)
       end
 
     end
