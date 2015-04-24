@@ -2,7 +2,7 @@ module DevOn
   module Provision
     def use_file(config, filename)
       return if config.name.eql? "default"
-      raise "No configs files found for: #{config.name}" if  !config.files 
+      raise "No configs files found for: #{config.name}" if  !config.files
       f = config.files.select{|f| f.include?(filename)}.first
       raise "File #{filename} not found in configs folder of the script" if f.nil?
       f
@@ -25,6 +25,14 @@ module DevOn
         config.commands.each do |cmd|
           catch_sftp_exception do
             @sftp ||= session.sftp.connect
+          end
+
+          if cmd.type.eql? Command::DOWNLOAD_FILE
+            catch_sftp_exception do
+              DevOn::print({:title=>"Preparing SFTP Download",:value=> cmd.value})
+              @sftp.download!(cmd.value[:source], cmd.value[:destination], {:verbose=>@tunnel.verbose})
+              DevOn::print({:title=>"File Download Complete",:value=> cmd.value[:destination]})
+            end
           end
 
           if cmd.type.eql? Command::UPLOAD_FILE
@@ -80,7 +88,7 @@ module DevOn
     def check_compatibility!(config)
       return if  config.compatibility.nil?
       unless config.compatibility.include?(ENV['scripts'])
-        DevOn::print({:error=>"Script '#{ENV['scripts']}' is not compatible in current configuration!", :solution=>"In configuration file, add:  Config.#{ENV['configs']}.add_compatibility!(#{ENV['scripts']})"})
+        DevOn::print({:error=>"Script '#{ENV['scripts']}' is not compatible in current configuration!", :solution=>"In configuration file, add:  Config.#{ENV['configs']}.add_compatibility!('#{ENV['scripts']}'s)"})
         exit
       end
     end

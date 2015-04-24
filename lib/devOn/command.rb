@@ -1,14 +1,23 @@
 module DevOn
+  require 'fileutils'
+  
   class Command
     SHELL = 1
     UPLOAD_FILE = 3
     APPLY_TEMPLATE = 4
+    DOWNLOAD_FILE = 5
 
     attr_accessor :type
     attr_accessor :value
     def initialize(type, command)
       @type = type
       @value = command
+    end
+
+    def self.download_file(file, destination)
+      data = {:source => file, :destination => destination}
+      FileUtils.mkdir_p File.dirname(destination)  
+      Command.add($config, Command::DOWNLOAD_FILE, data)
     end
 
     def self.upload_file(file, destination)
