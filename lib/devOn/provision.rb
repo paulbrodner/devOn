@@ -7,7 +7,14 @@ module DevOn
       raise "File #{filename} not found in configs folder of the script" if f.nil?
       f
     end
-
+    
+    #
+    # check the OS type
+    #
+    def is_os(os)
+      $connection.os.eql? os
+    end
+    
     #
     # This will actually provision the VM machine using the configuration provided
     #

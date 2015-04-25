@@ -24,10 +24,10 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.9"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency 'fileutils', '~> 0.7'
   spec.add_dependency 'confstruct', '~> 1.0.1'
   spec.add_dependency 'net-ssh' , '~> 2.6.5'
   spec.add_dependency 'net-sftp', '~> 2.1.2'
   spec.add_dependency 'awesome_print', '~> 1.6.1'
-  spec.add_dependency 'fileutils', '~> 0.7'
   spec.required_ruby_version = '>= 2.0.0'
 end
