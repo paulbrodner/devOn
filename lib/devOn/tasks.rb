@@ -3,6 +3,7 @@ require 'awesome_print'
 
 include Rake::DSL
 require 'devOn'
+
 ID_SCRIPTS = "scripts"
 ID_CONFIGS = "configs"
 ID_CONN = "connections"
@@ -26,7 +27,7 @@ module #{name.capitalize}
   # Command.run_shell(\"rm -rf /tmp/fromFile\")
   # Command.run_shell(\"ls -la /tmp\")
   # Command.upload_file(\"<source>/example.rb\", \"/home/vagrant/test.rb\")
-  # Command.upload_file(use_file($config, \"file.rb.erb\"), \"{$config.setting_from_config}/file.rb\")  
+  # Command.upload_file(use_file($config, \"file.rb.erb\"), \"{$config.setting_from_config}/file.rb\")
   #
   # and provision the machine with:
   # provision_on $config
@@ -40,29 +41,29 @@ end
     list ID_SCRIPTS
   end
 
-  desc "Run script"
+  desc "Run script (in bash: rake scripts:run CMD=1,2,3 INTERACTIVE=TRUE)"
   task :run do
-   
+    puts "\e[H\e[2J"
     script = interactive ID_SCRIPTS
     connection = interactive ID_CONN
 
     config = interactive ID_CONFIGS
     # load env.yml configuration
     DevOn::EnvConfig.new(File.expand_path(ID_CONN+'/env.yml')).load(ENV[ID_CONN])
-      
+
     require File.expand_path(connection)
     $connection = DevOn::Config.send(ENV[ID_CONN])
 
     exit if not_continue?(
-    {
-      :connection=>
-      {
-        :file =>connection,
-        :value=> $connection.settings
-      },
-      :script =>script,
-      :connfiguration => config
-    })
+        {
+            :connection =>
+                {
+                    :file => connection,
+                    :value => $connection.settings
+                },
+            :script => script,
+            :connfiguration => config
+        })
 
     if ENV[ID_CONFIGS] && ENV[ID_CONFIGS]!=ID_NONE
       require File.expand_path(config)
@@ -96,7 +97,7 @@ module #{name.capitalize}
   end
 end
   "
-    create_structure(ID_CONFIGS,name, template)
+    create_structure(ID_CONFIGS, name, template)
   end
 
   desc "List available configurations"
@@ -116,25 +117,30 @@ task :help do
   `rake -T`
 end
 
-task :default => [:help] 
+task :default => [:help]
 
 private
 require 'fileutils'
 
 def list(folder)
   _folder = Dir["#{folder}/*.rb"]
-  if folder.eql?ID_CONFIGS
-    _folder[0] = ID_NONE
+  if folder.eql? ID_CONFIGS
+    _folder << ID_NONE
+    _folder.reverse!
   else
+
     return [] if _folder.empty?
   end
-  
-  DevOn::print "Available #{folder.capitalize}:"
-  DevOn::print _folder
+
+  unless ENV['CMD']
+    DevOn::print "Available #{folder.capitalize}:"
+    DevOn::print _folder
+  end
+
   _folder
 end
 
-def create_structure(on, name,template)
+def create_structure(on, name, template)
   name = "test" if name.empty?
   config = File.join(on, name + ".rb")
   raise "File #{File.expand_path(config)} already exists!" if File.exist?(config)
@@ -146,6 +152,8 @@ def create_structure(on, name,template)
 end
 
 def not_continue?(message)
+  return true if ENV['INTERACTIVE'] && ENV['CMD']
+
   puts "\e[H\e[2J"
   DevOn::print "Running the following settings:"
   DevOn::print message
@@ -156,10 +164,21 @@ end
 
 def interactive(folder)
   all_files = list(folder)
-  return if all_files.empty?
-  puts "Choose a file from #{folder} to use:"
-  id_file = STDIN.gets.chomp.to_i || 0
-  file_path = all_files[id_file]
-  ENV[folder] =  File.basename(file_path, ".rb")
+  if ENV['CMD']
+    ids = ENV['CMD'].split(',')
+    id_file = ids[0] if folder.eql? ID_SCRIPTS
+    id_file = ids[1] if folder.eql? ID_CONN
+    id_file = ids[2] if folder.eql? ID_CONFIGS
+    id_file = id_file.to_i
+  else
+    puts "Choose a file from #{folder} to use:"
+    return if all_files.empty?
+    id_file = STDIN.gets.chomp.to_i || 0
+  end
+  get_script(folder, all_files[id_file])
+end
+
+def get_script(folder, file_path)
+  ENV[folder] = File.basename(file_path, ".rb")
   file_path
 end

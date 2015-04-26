@@ -15,7 +15,7 @@ module DevOn
 
     # return a temporary file created using the template
     def self.tmp_file(file)
-      f = File.open(File.join(Dir.tmpdir(),File.basename(file)), "w")
+      f = File.open(File.join(Dir.tmpdir(), File.basename(file)), "w")
       f.write(Template.from_file(file))
       f.close
       return f
