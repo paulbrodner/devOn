@@ -1,4 +1,4 @@
-module DevOn  
+module DevOn
   class Command
     SHELL = 1
     UPLOAD_FILE = 3
@@ -7,6 +7,7 @@ module DevOn
 
     attr_accessor :type
     attr_accessor :value
+
     def initialize(type, command)
       @type = type
       @value = command
@@ -14,7 +15,7 @@ module DevOn
 
     def self.download_file(file, destination)
       data = {:source => file, :destination => destination}
-      FileUtils.mkdir_p File.dirname(destination)  
+      FileUtils.mkdir_p File.dirname(destination)
       Command.add($config, Command::DOWNLOAD_FILE, data)
     end
 
@@ -44,10 +45,10 @@ module DevOn
       Command.add($config, Command::SHELL, shell_cmd)
     end
 
-    def self.apply_template( template, destination)
+    def self.apply_template(template, destination)
       puts "Using template: #{template} for #{destination}"
-      temp_data = {:file=> Template.from_file(template), :destination=>destination}
-      Command.add($config, Command::APPLY_TEMPLATE,temp_data)
+      temp_data = {:file => Template.from_file(template), :destination => destination}
+      Command.add($config, Command::APPLY_TEMPLATE, temp_data)
     end
 
     def to_h

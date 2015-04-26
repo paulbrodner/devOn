@@ -14,24 +14,26 @@ module DevOn
     # Configs.project.property2.test => will display 'test12'
     #
     extend self
+
     def on(name, &block)
       class_variable_set "@@#{name}", Confstruct::Configuration.new
-	  
+
       self.class.instance_eval do
         define_method "#{name}" do
           class_variable_get "@@#{name}"
         end
       end
-      # if we have some configuration files then add those into an array
 
+      # if we have some configuration files then add those into an array
       if File.exist?("configs/#{name}")
         t = class_variable_get "@@#{name}"
         t.files = Dir["configs/#{name}/**/*.*"]
-          
       end
       class_variable_get("@@#{name}").instance_exec(&block)
-	  self.send("#{name}").name = name
+      self.send("#{name}").name = name
       self.send("#{name}")
+    rescue NoMethodError => e
+      raise "It seems that your configuration [#{name}.rb] is missing or has an uninitialized key: " + e.to_s
     end
 
 

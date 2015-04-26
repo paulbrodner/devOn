@@ -13,6 +13,7 @@ module DevOn
     attr_reader :key_data
     attr_accessor :verbose
     attr_accessor :logger
+
     def initialize(config)
       #
       # configure connection based on Config provided
@@ -22,8 +23,8 @@ module DevOn
       @port = config[:port]
       @verbose = config[:verbose] || :info
       @password = config[:password]
-        
-      puts "Using config: #{config.inspect}"  
+
+      puts "Using config: #{config.inspect}"
 
       raise Exception, "Hostname should be provided" if @hostname.nil?
       raise Exception, "User should be provided" if @user.nil?
@@ -39,12 +40,12 @@ module DevOn
 
     def on_shh
       if @key_data
-        Net::SSH.start(@hostname, @user, :port=> @port, :key_data => @key_data, :verbose=>(@verbose) ) do |session|
+        Net::SSH.start(@hostname, @user, :port => @port, :key_data => @key_data, :verbose => (@verbose)) do |session|
           @logger = session.logger
           yield session
         end
       else
-        Net::SSH.start(@hostname, @user, :port=> @port, :password => @password, :verbose=>(@verbose) ) do |session|
+        Net::SSH.start(@hostname, @user, :port => @port, :password => @password, :verbose => (@verbose)) do |session|
           @logger = session.logger
           yield session
         end

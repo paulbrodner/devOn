@@ -1,6 +1,6 @@
 module DevOn
   require 'yaml'
-  
+
   class EnvConfig
     def initialize(path)
       @path = path
