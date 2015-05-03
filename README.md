@@ -1,6 +1,27 @@
 # DevOn
 Throw some pixie dust on test environments !
-This gem will help you configure test environments: Vagrant files, Remote VMS, real servers based on configuration provided. More to come...
+
+```
+DDDDDDDDDDDDD                                                        OOOOOOOOO
+D::::::::::::DDD                                                   OO:::::::::OO
+D:::::::::::::::DD                                               OO:::::::::::::OO
+DDD:::::DDDDD:::::D                                             O:::::::OOO:::::::O
+  D:::::D    D:::::D     eeeeeeeeeeee  vvvvvvv           vvvvvvvO::::::O   O::::::Onnnn  nnnnnnnn
+  D:::::D     D:::::D  ee::::::::::::ee v:::::v         v:::::v O:::::O     O:::::On:::nn::::::::nn
+  D:::::D     D:::::D e::::::eeeee:::::eev:::::v       v:::::v  O:::::O     O:::::On::::::::::::::nn
+  D:::::D     D:::::De::::::e     e:::::e v:::::v     v:::::v   O:::::O     O:::::Onn:::::::::::::::n
+  D:::::D     D:::::De:::::::eeeee::::::e  v:::::v   v:::::v    O:::::O     O:::::O  n:::::nnnn:::::n
+  D:::::D     D:::::De:::::::::::::::::e    v:::::v v:::::v     O:::::O     O:::::O  n::::n    n::::n
+  D:::::D     D:::::De::::::eeeeeeeeeee      v:::::v:::::v      O:::::O     O:::::O  n::::n    n::::n
+  D:::::D    D:::::D e:::::::e                v:::::::::v       O::::::O   O::::::O  n::::n    n::::n
+DDD:::::DDDDD:::::D  e::::::::e                v:::::::v        O:::::::OOO:::::::O  n::::n    n::::n
+D:::::::::::::::DD    e::::::::eeeeeeee         v:::::v          OO:::::::::::::OO   n::::n    n::::n
+D::::::::::::DDD       ee:::::::::::::e          v:::v             OO:::::::::OO     n::::n    n::::n
+DDDDDDDDDDDDD            eeeeeeeeeeeeee           vvv                OOOOOOOOO       nnnnnn    nnnnnn
+
+                                                                                     (c) Paul Brodner
+```                                                                                     
+This gem will help you configure test environments: Vagrant files, Remote VMs, AWS servers, etc,  based on configuration/connection provided (currenty user/password and private_key files are supported). More to come...
 
 ## Installation
 
@@ -20,7 +41,7 @@ Or install it yourself as:
 
 ## Usage
 
-Just require include DevOn in your new module, add configuration settings based on [confstruct](https://github.com/mbklein/confstruct) gem
+* Just require include DevOn in your new module, add configuration settings based on [confstruct](https://github.com/mbklein/confstruct) gem
 ```ruby
 require 'devOn'
 
@@ -57,6 +78,11 @@ And provisioning (running the Commands defined above) remotely on the vm with:
 ```ruby
  provision_on(Config.projectA)
 ```
+* Update: a new generator is now available. After gem install, just run:
+```
+devon -n <name-of-your-project>
+```
+(this will create the structure and copy the files needed for this script to run)
 
 ## Development
 
