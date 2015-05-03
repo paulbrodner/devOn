@@ -13,9 +13,9 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Configure test environments: Vagrant files, Remote VMS, real servers based on configuration provided}
   spec.homepage      = "http://paulbrodner.ro"
 
-  spec.files         = Dir['lib/**/*.rb'] +  Dir['README*', 'LICENSE*', 'CODE_OF*']
-  spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.files         = Dir['lib/**/*.rb'] +  Dir['README*', 'LICENSE*', 'CODE_OF*'] +   Dir['structure/**/*']
+  spec.bindir        = "bin"
+  spec.executables   = "devon"
   spec.require_paths = ["lib"]
 
   if spec.respond_to?(:metadata)

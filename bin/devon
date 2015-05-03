@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require 'devOn/structure'
+
+if ARGV.count.eql?(0)
+  puts "No argument specified. Displaying help menu:"
+  ARGV << "-h"
+end
+
+puts "\e[H\e[2J"
+opts = OptionParser.new do |opts|
+  opts.banner = <<END
+
+
+DDDDDDDDDDDDD                                                        OOOOOOOOO
+D::::::::::::DDD                                                   OO:::::::::OO
+D:::::::::::::::DD                                               OO:::::::::::::OO
+DDD:::::DDDDD:::::D                                             O:::::::OOO:::::::O
+  D:::::D    D:::::D     eeeeeeeeeeee  vvvvvvv           vvvvvvvO::::::O   O::::::Onnnn  nnnnnnnn
+  D:::::D     D:::::D  ee::::::::::::ee v:::::v         v:::::v O:::::O     O:::::On:::nn::::::::nn
+  D:::::D     D:::::D e::::::eeeee:::::eev:::::v       v:::::v  O:::::O     O:::::On::::::::::::::nn
+  D:::::D     D:::::De::::::e     e:::::e v:::::v     v:::::v   O:::::O     O:::::Onn:::::::::::::::n
+  D:::::D     D:::::De:::::::eeeee::::::e  v:::::v   v:::::v    O:::::O     O:::::O  n:::::nnnn:::::n
+  D:::::D     D:::::De:::::::::::::::::e    v:::::v v:::::v     O:::::O     O:::::O  n::::n    n::::n
+  D:::::D     D:::::De::::::eeeeeeeeeee      v:::::v:::::v      O:::::O     O:::::O  n::::n    n::::n
+  D:::::D    D:::::D e:::::::e                v:::::::::v       O::::::O   O::::::O  n::::n    n::::n
+DDD:::::DDDDD:::::D  e::::::::e                v:::::::v        O:::::::OOO:::::::O  n::::n    n::::n
+D:::::::::::::::DD    e::::::::eeeeeeee         v:::::v          OO:::::::::::::OO   n::::n    n::::n
+D::::::::::::DDD       ee:::::::::::::e          v:::v             OO:::::::::OO     n::::n    n::::n
+DDDDDDDDDDDDD            eeeeeeeeeeeeee           vvv                OOOOOOOOO       nnnnnn    nnnnnn
+
+                                                                                     (c) Paul Brodner
+
+END
+  opts.separator ""
+  opts.separator "Specific options:"
+
+  opts.on("-n", "--new name", "Setup your new application") do |name|
+    DevOn::Structure.setup name
+  end
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts "\e[H\e[2J"
+    puts opts
+    exit
+  end
+end
+
+begin
+  opts.parse!(ARGV)
+rescue OptionParser::ParseError => e
+  puts e
+  exit 1
+end

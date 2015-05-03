@@ -1,0 +1,23 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "alfresco-env"
+  config.vm.box_url = "http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-07-12.box"
+
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+    vb.gui = false
+    # Customize the amount of memory on the VM:
+    vb.memory = "4096"
+
+    config.vm.network "forwarded_port", guest: 9200, host: 9200
+    config.vm.network "forwarded_port", guest: 9292, host: 9292
+
+    #grid hub
+    config.vm.network "forwarded_port", guest: 4444, host: 4444
+
+    #grid node
+    config.vm.network "forwarded_port", guest: 5555, host: 5555
+  end
+end
