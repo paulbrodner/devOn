@@ -37,7 +37,7 @@ module DevOn
       puts "Using shell file: #{shell_file}"
       tmp_shell_file = File.join(($connection.tmp || "."), File.basename(shell_file))
       Command.upload_file(shell_file, tmp_shell_file)
-      Command.add($config, Command::SHELL, "chmod +x #{tmp_shell_file} && sh #{tmp_shell_file}")
+      Command.run_shell "chmod +x #{tmp_shell_file} && sh #{tmp_shell_file}"
     end
 
     def self.run_shell(shell_cmd)
@@ -51,6 +51,20 @@ module DevOn
       Command.add($config, Command::APPLY_TEMPLATE, temp_data)
     end
 
+    def self.backup(file, destination="")
+      puts "Create backup #{File.join(destination, file)}"
+      Command.run_shell "cp #{file}{,.backup.`date --iso`}"
+    end
+
+    #
+    # kills a program based on program_name
+    #
+    def self.kill_program(program_name)
+      program_name = program_name.insert(0,"[")
+      program_name = program_name.insert(2,"]")
+      Command.run_shell "kill -9 $(ps aux | grep '#{program_name}' | awk '{print $2}')"
+    end
+
     def to_h
       if @value.is_a? String
         return @value
@@ -62,7 +76,6 @@ module DevOn
     end
 
     private
-
     # use Command.add to create new commands in the list of configuration item
     #
     def self.add(config, cmd_type, data)
