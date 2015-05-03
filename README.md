@@ -1,4 +1,4 @@
-# DevOn
+# DevOn [![Build Status](https://travis-ci.org/paulbrodner/devOn.svg)](https://travis-ci.org/paulbrodner/devOn)
 Throw some pixie dust on test environments !
 
 ```
