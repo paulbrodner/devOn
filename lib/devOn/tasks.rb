@@ -43,7 +43,7 @@ end
 
   desc "Run script (in bash: rake scripts:run CMD=1,2,3 INTERACTIVE=TRUE)"
   task :run do
-    puts "\e[H\e[2J"
+    puts "\e[H\e[2J" if ENV['INTERACTIVE'].eql?"true"
     script = interactive ID_SCRIPTS
     connection = interactive ID_CONN
 
@@ -54,7 +54,7 @@ end
     require File.expand_path(connection)
     $connection = DevOn::Config.send(ENV[ID_CONN])
 
-    exit if not_continue?(
+    exit if !continue?(
         {
             :connection =>
                 {
@@ -151,15 +151,18 @@ def create_structure(on, name, template)
   puts "Created structure for #{config}!"
 end
 
-def not_continue?(message)
-  return true if ENV['INTERACTIVE'] && ENV['CMD']
-
-  puts "\e[H\e[2J"
-  DevOn::print "Running the following settings:"
-  DevOn::print message
-  DevOn::print "Continue?(y/n):"
-  r = STDIN.gets.chomp
-  return r.downcase.eql?("n")
+def continue?(message)
+  if ENV['INTERACTIVE'].eql?"true"
+    puts "\e[H\e[2J"
+    DevOn::print "Running the following settings: #{ENV['INTERACTIVE']}"
+    DevOn::print "Running the following settings:"
+    DevOn::print message
+    DevOn::print "Continue?(y/n):"
+    r = STDIN.gets.chomp
+    return r.downcase.eql?("y") || r.empty?
+  else
+    return true
+  end
 end
 
 def interactive(folder)
