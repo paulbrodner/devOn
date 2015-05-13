@@ -101,7 +101,7 @@ module DevOn
     def check_compatibility!(config)
       return if config.compatibility.nil?
       unless config.compatibility.include?(ENV['scripts'])
-        DevOn::print({:error => "Script '#{ENV['scripts']}' is not compatible in current configuration!", :solution => "In configuration file, add:  Config.#{ENV['configs']}.add_compatibility!('#{ENV['scripts']}'s)"})
+        DevOn::print({:error => "Script '#{ENV['scripts']}' is not compatible in current configuration!", :solution => "In configuration file, add:  Config.#{ENV['configs']}.add_compatibility!(\"#{ENV['scripts']}\")"})
         exit
       end
     end
