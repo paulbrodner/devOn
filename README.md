@@ -72,17 +72,19 @@ module Install
   Command.upload_file(Config.projectA, "<source>/example.erb.rb", "/home/vagrant/test.rb")
   
   use_file(config, "custom-cache-context.xml") #will automaticaly ling "configs/projectA/custom-cache-context.xml" file
+  
+  provision_on($config)
 end
 ```
-And provisioning (running the Commands defined above) remotely on the vm with:
+The following line will actually run the provisioning remotely on the vm
 ```ruby
- provision_on(Config.projectA)
+ provision_on($config)
 ```
-* Update: a new generator is now available. After gem install, just run:
+A new generator is now available. After gem install, just run:
 ```
 devon -n <name-of-your-project>
 ```
-(this will create the structure and copy the files needed for this script to run)
+(this will create the structure andof your new <name-of-your-project>)
 
 ## Development
 
