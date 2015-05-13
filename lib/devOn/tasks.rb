@@ -154,7 +154,6 @@ end
 def continue?(message)
   if ENV['INTERACTIVE'].eql?"true"
     puts "\e[H\e[2J"
-    DevOn::print "Running the following settings: #{ENV['INTERACTIVE']}"
     DevOn::print "Running the following settings:"
     DevOn::print message
     DevOn::print "Continue?(y/n):"
