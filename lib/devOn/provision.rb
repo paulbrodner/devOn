@@ -26,10 +26,13 @@ module DevOn
       @tunnel = Tunnel.new($connection.settings.to_h)
       @errors = []
 
+      @results = nil
+
       stdout = []
       @sftp = nil
       @tunnel.on_shh do |session|
-        config.commands.each do |cmd|
+        config.commands.each do |cmdItem|
+          cmd = config.commands.shift
           catch_sftp_exception do
             @sftp ||= session.sftp.connect
           end
@@ -57,6 +60,7 @@ module DevOn
                 if stream == :stdout
                   arr = data.split("\n")
                   stdout = arr.empty? ? data : arr
+                  @results = stdout
                 end
               end
               DevOn::print({:title => "[SHELL OUTPUT]", :output => stdout})
@@ -70,6 +74,8 @@ module DevOn
       else
         ap "NO ERRORS ENCOUNTERED!"
       end
+
+      @results
     end
 
     private
