@@ -1,0 +1,25 @@
+<div class="alert alert-info">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  Scripts already executed
+</div>
+
+<table class="table table-striped">
+  <tr>
+    <th>Script</th>
+    <th>Configuration</th>
+    <th>Connection</th>
+    <th>Status</th>
+    <th>Executed</th>
+    <th>Action</th>
+  </tr>
+  <% @histories.each do |h| %>
+      <tr>
+        <td><%= h.script %></td>
+        <td><%= h.configuration %></td>
+        <td><%= h.connection %></td>
+        <td><%= h.results %></td>
+        <td><%= minutes_in_words h.created_at %></td>
+        <td><a href="/rerun">Rerun</a></td>
+      </tr>
+  <% end %>
+</table>

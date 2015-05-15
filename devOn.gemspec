@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.description   = %q{Configure test environments: Vagrant files, Remote VMS, real servers based on configuration provided}
   spec.homepage      = "http://paulbrodner.ro"
 
-  spec.files         = Dir['lib/**/*.rb'] +  Dir['README*', 'LICENSE*', 'CODE_OF*'] +   Dir['structure/**/*']
+  spec.files         = Dir['lib/**/*.*'] +  Dir['README*', 'LICENSE*', 'CODE_OF*'] +   Dir['structure/**/*']
   spec.bindir        = "bin"
   spec.executables   = "devon"
   spec.require_paths = ["lib"]
@@ -23,11 +23,22 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_development_dependency "bundler", "~> 1.7"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_dependency "rake", "~> 10.0"
   spec.add_dependency 'confstruct', '~> 1.0.1'
   spec.add_dependency 'net-ssh' , '~> 2.6.5'
   spec.add_dependency 'net-sftp', '~> 2.1.2'
   spec.add_dependency 'awesome_print', '~> 1.6.1'
+  spec.add_dependency 'sinatra', '~> 1.4.6'
+  spec.add_dependency 'sinatra-param', '~> 1.4.0'
+  spec.add_dependency 'activerecord', '~> 4.2.1'
+  spec.add_dependency 'activesupport', '~>4.2.1'
+  spec.add_dependency 'activemodel', '~>4.2.1'
+  spec.add_dependency 'sqlite3', '~> 1.3.10'
+  spec.add_dependency 'will_paginate', '~> 3.0.7'
+  spec.add_dependency 'will_paginate-bootstrap', '~> 1.0.1'
+
+  spec.add_dependency 'redis', '~> 3.2.1'
+
   if RUBY_PLATFORM.include?"mingw32"
     spec.add_development_dependency 'fileutils', '~> 0.7'
   else
