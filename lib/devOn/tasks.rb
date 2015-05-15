@@ -44,10 +44,11 @@ end
   desc "Run script (in bash: rake scripts:run CMD=1,2,3 INTERACTIVE=TRUE)"
   task :run do
     puts "\e[H\e[2J" if ENV['INTERACTIVE'].eql?"true"
+
     script = interactive ID_SCRIPTS
     connection = interactive ID_CONN
-
     config = interactive ID_CONFIGS
+
     # load env.yml configuration
     DevOn::EnvConfig.new(File.expand_path(ID_CONN+'/env.yml')).load(ENV[ID_CONN])
 
@@ -125,10 +126,8 @@ require 'fileutils'
 def list(folder)
   _folder = Dir["#{folder}/*.rb"]
   if folder.eql? ID_CONFIGS
-    _folder << ID_NONE
-    _folder.reverse!
+    _folder.unshift ID_NONE
   else
-
     return [] if _folder.empty?
   end
 
