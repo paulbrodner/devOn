@@ -12,7 +12,16 @@ module DevOn
       end
 
       def self.open_connection!
-        self.open File.expand_path("~/alfresco-scripts.db")
+        self.open db
+      end
+
+      def self.db
+        File.expand_path("~/alfresco-scripts.db")
+      end
+      def self.init!
+        File.delete db
+        self.open_connection!
+        self.setup
       end
 
       def self.setup

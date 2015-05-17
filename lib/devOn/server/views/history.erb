@@ -1,25 +1,50 @@
-<div class="alert alert-info">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  Scripts already executed
-</div>
-
-<table class="table table-striped">
-  <tr>
-    <th>Script</th>
-    <th>Connection</th>
-    <th>Configuration</th>
-    <th>Status</th>
-    <th>Executed</th>
-    <th>Action</th>
-  </tr>
-  <% @histories.each do |h| %>
+<% if @histories.empty? %>
+    <div class="alert alert-info">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      The are no scripts executed yet. Please open <a href="/execute">Execute</a> tab.
+    </div>
+<% else %>
+    <table class="table table-striped">
       <tr>
-        <td><%= h.script %></td>
-        <td><%= h.connection %></td>
-        <td><%= h.configuration %></td>
-        <td><%= h.results %></td>
-        <td><%= minutes_in_words h.created_at %></td>
-        <td><a href="/run/<%= h.id %>">Rerun</a></td>
+        <th>Script</th>
+        <th>Connection</th>
+        <th>Configuration</th>
+        <th>Executed</th>
+        <th>Action</th>
+        <th>Results</th>
       </tr>
-  <% end %>
-</table>
+      <% @histories.each do |h| %>
+          <tr>
+            <td><%= h.script %></td>
+            <td><%= h.connection %></td>
+            <td><%= h.configuration %></td>
+            <td><%= h.created_at %></td>
+            <td><a href="/run/<%= h.id %>">Rerun</a></td>
+            <td>
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal<%= h.id %>">
+                ...
+              </button>
+            </td>
+          </tr>
+          <!-- Modal -->
+          <div class="modal fade" id="myModal<%= h.id %>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">a<%= h.script %></h4>
+                </div>
+                <div class="modal-body">
+                  <pre class="prettyprint ">
+                    <%= h.results %>
+                  </pre>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+      <% end %>
+    </table>
+<% end %>

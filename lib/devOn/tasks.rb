@@ -9,6 +9,7 @@ ID_CONFIGS = "configs"
 ID_CONN = "connections"
 ID_NONE = "No config"
 
+
 namespace :scripts do
   desc "Create a new script"
   task :new do
@@ -110,6 +111,14 @@ namespace :server do
   desc "Start Sinatra Server"
   task :up do
     `bundle exec rackup config.ru`
+  end
+end
+
+namespace :db do
+  desc "Initi/Reinitialize db"
+  task :init do
+    require 'devOn/server/db/base'
+    puts DevOn::Server::DB.init!
   end
 end
 
