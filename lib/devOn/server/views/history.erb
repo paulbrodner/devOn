@@ -6,8 +6,8 @@
 <table class="table table-striped">
   <tr>
     <th>Script</th>
-    <th>Configuration</th>
     <th>Connection</th>
+    <th>Configuration</th>
     <th>Status</th>
     <th>Executed</th>
     <th>Action</th>
@@ -15,11 +15,11 @@
   <% @histories.each do |h| %>
       <tr>
         <td><%= h.script %></td>
-        <td><%= h.configuration %></td>
         <td><%= h.connection %></td>
+        <td><%= h.configuration %></td>
         <td><%= h.results %></td>
         <td><%= minutes_in_words h.created_at %></td>
-        <td><a href="/rerun">Rerun</a></td>
+        <td><a href="/run/<%= h.id %>">Rerun</a></td>
       </tr>
   <% end %>
 </table>

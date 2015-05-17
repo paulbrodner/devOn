@@ -8,12 +8,11 @@ require "will_paginate-bootstrap"
 require "devOn/server/db/base"
 require "devOn/server/db/history"
 require "devOn/tasks"
+require 'open3'
 
 module DevOn::Server
   class App < Sinatra::Base
     include WillPaginate::Sinatra::Helpers
-
-
     #set :bind, '10.11.12.27'
     set :root, "server"
     set :public_folder, File.join(File.expand_path('..', __FILE__),"static")
@@ -24,9 +23,15 @@ module DevOn::Server
       erb :history
     end
 
-    get '/run/:script/:connection/:config' do
-      cmd = "#{params[:script]},#{params[:connection]},#{params[:config]}"
-      @results = `rake scripts:run_all[#{cmd}] INTERACTIVE=false`
+    get '/run/:history_id' do
+      history = History.find_by(:id=>params[:history_id])
+      cmd = "'#{history.script}','#{history.connection}','#{history.configuration}'"
+      rake = "rake scripts:run_all[#{cmd}] INTERACTIVE=false"
+
+      rake_output, s = Open3.capture2e rake
+
+      @results = "Running the following rake task: #{rake}\n\n"
+      @results += rake_output
       erb :results
     end
 
@@ -68,7 +73,6 @@ module DevOn::Server
     def histories(display=10)
       @histories =  History.all
     end
-
   end
 end
 

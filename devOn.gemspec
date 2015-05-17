@@ -37,8 +37,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'will_paginate', '~> 3.0.7'
   spec.add_dependency 'will_paginate-bootstrap', '~> 1.0.1'
 
-  spec.add_dependency 'redis', '~> 3.2.1'
-
   if RUBY_PLATFORM.include?"mingw32"
     spec.add_development_dependency 'fileutils', '~> 0.7'
   else

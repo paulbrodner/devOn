@@ -24,14 +24,12 @@ module DevOn
             table.column :results, :string
             table.timestamps null: false
           end
-
         end
       end
 
       def self.insert_dummy_data
         require_relative "history"
-        History.create(:script => "a/b3.rb", :configuration => "config1", :connection => "conn1", :results => "ok");
-        History.create(:script => "a/b2.rb", :configuration => "config1", :connection => "conn1", :results => "ok");
+        History.create(:script => "scripts/connect.rb", :configuration => "", :connection => "connections/vagrant.rb", :results => "ok");
       end
 
       #
