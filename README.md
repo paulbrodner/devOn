@@ -84,7 +84,7 @@ A new generator is now available. After gem install, just run:
 ```
 devon -n <name-of-your-project>
 ```
-(this will create the structure andof your new <name-of-your-project>)
+(this will create the structure of your new <name-of-your-project>)
 
 ## GUI Usage
 There is also an interactive way to view and run existing scripts created with [devON](https://github.com/paulbrodner/devOn).
