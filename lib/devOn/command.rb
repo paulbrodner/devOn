@@ -56,6 +56,15 @@ module DevOn
       Command.run_shell "cp #{file}{,.backup.`date --iso`}"
     end
 
+    def self.ask_permision
+      if ENV['INTERACTIVE'].eql? "true"
+        yield
+      else
+        puts "Do you want to continue ?(y/n)"
+        yield if STDIN.gets().downcase.chomp().eql?"y"
+      end
+    end
+
     #
     # kills a program based on program_name
     #

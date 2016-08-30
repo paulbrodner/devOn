@@ -1,3 +1,7 @@
 # A sample Gemfile
 source "https://rubygems.org"
-gem 'devOn', :git => 'git://github.com/paulbrodner/devOn.git', :tag => 'v1.0.1'
+ruby "2.1.5"
+gem 'activerecord', '~> 4.2.1'
+gem 'will_paginate', '~> 3.0.7'
+gem 'will_paginate-bootstrap', '~> 1.0.1'
+gem 'devOn' #, :git => 'git://github.com/paulbrodner/devOn.git', :tag => 'v1.0.1'

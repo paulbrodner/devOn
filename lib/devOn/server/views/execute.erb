@@ -1,0 +1,48 @@
+<form method="post" action="/execute">
+  <fieldset class="radiogroup">
+    <legend>Connection</legend>
+    <div class="alert alert-warning">
+      <div class="form">
+        <label class="control-label">
+          Apply script on connection:</label>
+        <% @connections.each do |connection| %>
+            <label class="radio">
+              <input value="<%= connection %>" type="radio" name="connection"><%= connection %>
+            </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="radiogroup">
+    <legend>Scripts</legend>
+    <div class="alert alert-info">
+      <div class="form">
+        <label class="control-label">
+          Select script to run:</label>
+        <% @scripts.each do |script| %>
+        <label class="radio">
+          <input value="<%= script %>" type="radio" name="script"><%= script %>
+        </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="radiogroup">
+    <legend>Configurations</legend>
+    <div class="alert alert-info">
+      <div class="form">
+        <label class="control-label">
+          Select one configuration file with the script:</label>
+        <% @configurations.each do |config| %>
+            <label class="radio">
+              <input value="<%= config %>" type="radio" name="configuration"><%= config %>
+            </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+
+  <input type="submit" value="Execute"/>
+</form>

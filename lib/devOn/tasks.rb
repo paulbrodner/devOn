@@ -9,6 +9,7 @@ ID_CONFIGS = "configs"
 ID_CONN = "connections"
 ID_NONE = "No config"
 
+
 namespace :scripts do
   desc "Create a new script"
   task :new do
@@ -43,11 +44,12 @@ end
 
   desc "Run script (in bash: rake scripts:run CMD=1,2,3 INTERACTIVE=TRUE)"
   task :run do
-    puts "\e[H\e[2J" if ENV['INTERACTIVE'].eql?"true"
+    puts "\e[H\e[2J" if ENV['INTERACTIVE'].eql? "true"
+
     script = interactive ID_SCRIPTS
     connection = interactive ID_CONN
-
     config = interactive ID_CONFIGS
+
     # load env.yml configuration
     DevOn::EnvConfig.new(File.expand_path(ID_CONN+'/env.yml')).load(ENV[ID_CONN])
 
@@ -75,6 +77,48 @@ end
     end
 
     require File.expand_path(script)
+  end
+
+  def filename(path)
+    File.basename(path, ".rb")
+  end
+
+  desc "Run script (in bash: rake scripts:run CMD=1,2,3 INTERACTIVE=TRUE)"
+  task :run_all, [:script, :connection, :config] do |t, args|
+    script = args[:script]
+    connection = args[:connection]
+    config = args[:config]
+
+    # load env.yml configuration
+    DevOn::EnvConfig.new(File.expand_path('connections/env.yml')).load(filename(connection))
+    require File.expand_path(connection)
+    $connection = DevOn::Config.send(filename(connection))
+
+    if config.empty?
+      $config = DevOn::Config.on "default" do
+        name "default_config"
+      end
+    else
+      require File.expand_path(config)
+      $config = DevOn::Config.send(filename(config))
+    end
+
+    require File.expand_path(script)
+  end
+end
+
+namespace :server do
+  desc "Start Sinatra Server"
+  task :up do
+    `bundle exec rackup config.ru`
+  end
+end
+
+namespace :db do
+  desc "Initi/Reinitialize db"
+  task :init do
+    require 'devOn/server/db/base'
+    puts DevOn::Server::DB.init!
   end
 end
 
@@ -125,10 +169,8 @@ require 'fileutils'
 def list(folder)
   _folder = Dir["#{folder}/*.rb"]
   if folder.eql? ID_CONFIGS
-    _folder << ID_NONE
-    _folder.reverse!
+    _folder.unshift ID_NONE
   else
-
     return [] if _folder.empty?
   end
 
@@ -152,7 +194,7 @@ def create_structure(on, name, template)
 end
 
 def continue?(message)
-  if ENV['INTERACTIVE'].eql?"true"
+  if ENV['INTERACTIVE'].eql? "true"
     puts "\e[H\e[2J"
     DevOn::print "Running the following settings:"
     DevOn::print message
