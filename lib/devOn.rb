@@ -9,8 +9,9 @@ require "devOn/tunnel"
 module DevOn
   OS_WIN  = "Windows"
   OS_UNIX = "Unix"
+  $output = {}
   
-  def self.print(info)
+  def self.print(info)    
     ap info, options = {:indent=>4, :multiline=>true,
       :color => {
       :args       => :pale,

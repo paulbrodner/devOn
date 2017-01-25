@@ -54,15 +54,19 @@ module DevOn
           end
 
           if cmd.type.eql? Command::SHELL
-            catch_ssh_exception do                            
-              DevOn::print({:title => "Preparing SSH command", :value => cmd.value})
-              session.exec!(cmd.value) do |channel, stream, data|
+            catch_ssh_exception do 
+              command = cmd.value
+              command = command.gsub("$output", $output) if(command.include?"$output")                
+            
+              DevOn::print({:title => "Preparing SSH command", :value => command})
+              session.exec!(command) do |channel, stream, data|
                 if stream == :stdout
                   arr = data.split("\n")
                   stdout = arr.empty? ? data : arr
                   @results = stdout
                 end
               end
+              $output = stdout.flatten.join(' ')
               DevOn::print({:title => "[SHELL OUTPUT]", :output => stdout})
             end
           end

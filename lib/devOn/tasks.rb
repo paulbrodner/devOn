@@ -25,6 +25,9 @@ module #{name.capitalize}
   #
   # Command.run_shell_file(\"install/test.sh\")
   # Command.run_shell(\"ls -la /tmp\")
+  #
+  # you can also use '$output' keyword if you want to use the last results of the command into next command
+  # Command.run_shell(\"echo 'last command result is: $output'\") 
   # Command.run_shell(\"rm -rf /tmp/fromFile\")
   # Command.run_shell(\"ls -la /tmp\")
   # Command.upload_file(\"<source>/example.rb\", \"/home/vagrant/test.rb\")
