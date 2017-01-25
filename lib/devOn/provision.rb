@@ -15,6 +15,7 @@ module DevOn
       $connection.os.eql? os
     end
 
+    
     #
     # This will actually provision the VM machine using the configuration provided
     #
@@ -33,12 +34,10 @@ module DevOn
       @tunnel.on_shh do |session|
         while config.commands.count > 0
           cmd = config.commands.shift
-          catch_sftp_exception do
-            @sftp ||= session.sftp.connect
-          end
-
+          
           if cmd.type.eql? Command::DOWNLOAD_FILE
             catch_sftp_exception do
+              @sftp = init_sftp
               DevOn::print({:title => "Preparing SFTP Download", :value => cmd.value})
               @sftp.download!(cmd.value[:source], cmd.value[:destination], {:verbose => @tunnel.verbose})
               DevOn::print({:title => "File Download Complete", :value => cmd.value[:destination]})
@@ -47,6 +46,7 @@ module DevOn
 
           if cmd.type.eql? Command::UPLOAD_FILE
             catch_sftp_exception do
+              @sftp = init_sftp
               DevOn::print({:title => "Preparing SFTP Upload", :value => cmd.value})
               @sftp.upload!(cmd.value[:source], cmd.value[:destination], {:verbose => @tunnel.verbose})
               DevOn::print({:title => "File Uploaded", :value => cmd.value[:destination]})
@@ -54,7 +54,7 @@ module DevOn
           end
 
           if cmd.type.eql? Command::SHELL
-            catch_ssh_exception do
+            catch_ssh_exception do                            
               DevOn::print({:title => "Preparing SSH command", :value => cmd.value})
               session.exec!(cmd.value) do |channel, stream, data|
                 if stream == :stdout
@@ -79,6 +79,13 @@ module DevOn
     end
 
     private
+
+    def init_sftp
+      catch_sftp_exception do
+        @sftp ||= session.sftp.connect
+      end
+      return @sftp
+    end
 
     def catch_sftp_exception(&block)
       yield block
