@@ -170,6 +170,8 @@ private
 require 'fileutils'
 
 def list(folder)
+  show_host = folder.eql?(ID_CONN)
+  
   _folder = Dir["#{folder}/*.rb"]
   if folder.eql? ID_CONFIGS
     _folder.unshift ID_NONE
@@ -177,6 +179,16 @@ def list(folder)
     return [] if _folder.empty?
   end
 
+  if show_host
+    _folder_with_host = []
+    _folder.each do |content|
+       info = DevOn::EnvConfig.new(File.expand_path('connections/env.yml')).load(filename(content))
+      _folder_with_host << "#{content} {#{info["hostname"]}}"      
+    end
+    _folder = _folder_with_host
+  end
+
+  
   unless ENV['CMD']
     DevOn::print "Available #{folder.capitalize}:"
     DevOn::print _folder
