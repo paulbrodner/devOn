@@ -223,6 +223,17 @@ end
 
 def interactive(folder)
   all_files = list(folder)
+  tmp = []
+  all_files.each do |e| 
+    if e.include? "{"
+      tmp << e.split("{").first.strip  
+    else
+      tmp << e
+    end
+  end
+  all_files = tmp
+  puts all_files.inspect
+
   if ENV['CMD']
     ids = ENV['CMD'].split(',')
     id_file = ids[0] if folder.eql? ID_SCRIPTS
