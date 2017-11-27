@@ -16,7 +16,7 @@ module DevOn
       end
 
       def self.db
-        File.expand_path("~/alfresco-scripts.db")
+        File.expand_path("~/devon-scripts.db")
       end
       def self.init!
         File.delete db

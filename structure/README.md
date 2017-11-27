@@ -34,7 +34,7 @@ $connection - is the current connection ("connections") file active
 Clone the repository
 
 ```ruby
-git clone https://github.com/paulbrodner/alfresco-scripts
+git clone https://github.com/paulbrodner/devOn
 ```
 
 Modify configuration/scripts files as you wish and run rake helper commands
