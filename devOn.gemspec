@@ -35,12 +35,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activemodel', '~>4.2.1'
   spec.add_dependency 'sqlite3', '~> 1.3.10'
   spec.add_dependency 'will_paginate', '~> 3.0.7'
-  spec.add_dependency 'will_paginate-bootstrap', '~> 1.0.1'
-
-  if RUBY_PLATFORM.include?"mingw32"
-    spec.add_development_dependency 'fileutils', '~> 0.7'
-  else
-    spec.add_runtime_dependency 'fileutils', '~> 0.7'
-  end
+  spec.add_dependency 'will_paginate-bootstrap', '~> 1.0.1'  
   spec.required_ruby_version = '>= 2.0.0'
 end
