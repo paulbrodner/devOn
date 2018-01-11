@@ -2,26 +2,25 @@
 Throw some pixie dust on test environments !
 
 ```
-DDDDDDDDDDDDD                                                        OOOOOOOOO
-D::::::::::::DDD                                                   OO:::::::::OO
-D:::::::::::::::DD                                               OO:::::::::::::OO
-DDD:::::DDDDD:::::D                                             O:::::::OOO:::::::O
-  D:::::D    D:::::D     eeeeeeeeeeee  vvvvvvv           vvvvvvvO::::::O   O::::::Onnnn  nnnnnnnn
-  D:::::D     D:::::D  ee::::::::::::ee v:::::v         v:::::v O:::::O     O:::::On:::nn::::::::nn
-  D:::::D     D:::::D e::::::eeeee:::::eev:::::v       v:::::v  O:::::O     O:::::On::::::::::::::nn
-  D:::::D     D:::::De::::::e     e:::::e v:::::v     v:::::v   O:::::O     O:::::Onn:::::::::::::::n
-  D:::::D     D:::::De:::::::eeeee::::::e  v:::::v   v:::::v    O:::::O     O:::::O  n:::::nnnn:::::n
-  D:::::D     D:::::De:::::::::::::::::e    v:::::v v:::::v     O:::::O     O:::::O  n::::n    n::::n
-  D:::::D     D:::::De::::::eeeeeeeeeee      v:::::v:::::v      O:::::O     O:::::O  n::::n    n::::n
-  D:::::D    D:::::D e:::::::e                v:::::::::v       O::::::O   O::::::O  n::::n    n::::n
-DDD:::::DDDDD:::::D  e::::::::e                v:::::::v        O:::::::OOO:::::::O  n::::n    n::::n
-D:::::::::::::::DD    e::::::::eeeeeeee         v:::::v          OO:::::::::::::OO   n::::n    n::::n
-D::::::::::::DDD       ee:::::::::::::e          v:::v             OO:::::::::OO     n::::n    n::::n
-DDDDDDDDDDDDD            eeeeeeeeeeeeee           vvv                OOOOOOOOO       nnnnnn    nnnnnn
 
-                                                                                     (c) Paul Brodner
+  ██████╗ ███████╗██╗   ██╗ ██████╗ ███╗   ██╗
+  ██╔══██╗██╔════╝██║   ██║██╔═══██╗████╗  ██║
+  ██║  ██║█████╗  ██║   ██║██║   ██║██╔██╗ ██║
+  ██║  ██║██╔══╝  ╚██╗ ██╔╝██║   ██║██║╚██╗██║
+  ██████╔╝███████╗ ╚████╔╝ ╚██████╔╝██║ ╚████║
+  ╚═════╝ ╚══════╝  ╚═══╝   ╚═════╝ ╚═╝  ╚═══╝
+                                  by Paul Brodner
 ```                                                                                     
-This gem will help you configure test environments: Vagrant files, Remote VMs, AWS servers, etc,  based on configuration/connection provided (currenty user/password and private_key files are supported). More to come...
+
+## Features
+
+* run shell script(s) or commands over multiple environments via SSH
+* ability to provision remote/local unix machines (virtual boxes, AWS servers, etc.) based on one YAML configuration file (username/password or private key)
+* ability to run any script with any configuration (script parameters) over remote machine
+* ability to run scripts on your terminal (via Rake tasks) or from your web browser
+* no agents required to be installed on remote machines, only ssh connection enabled
+* usefull for provisioning test machines
+* use 
 
 ## Installation
 
@@ -41,7 +40,7 @@ Or install it yourself as:
 
 ## Usage
 
-* Just require include DevOn in your new module, add configuration settings based on [confstruct](https://github.com/mbklein/confstruct) gem
+* Just require DevOn in your new module, add configuration settings based on [confstruct](https://github.com/mbklein/confstruct) gem
 ```ruby
 require 'devOn'
 

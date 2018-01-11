@@ -20,8 +20,8 @@ module DevOn
     end
 
     def self.upload_file(file, destination)
-      raise "Source file not found: #{file}" unless File.exist? file
       puts "Using file for upload: #{file}"
+      raise "Source file not found: #{file}" unless File.exist?(file)      
       file_name = File.basename(file)
 
       if file_name.include?(".erb")

@@ -2,8 +2,7 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "alfresco-env"
-  config.vm.box_url = "http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-07-12.box"
+  config.vm.box = "minimal/trusty64"  
 
   config.vm.provider "virtualbox" do |vb|
     # Display the VirtualBox GUI when booting the machine
@@ -19,5 +18,7 @@ Vagrant.configure(2) do |config|
 
     #grid node
     config.vm.network "forwarded_port", guest: 5555, host: 5555
+
+    vb.customize ["modifyvm", :id, "--usb", "off"]
   end
 end
