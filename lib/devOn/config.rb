@@ -1,18 +1,20 @@
 module DevOn
   require 'confstruct'
 
-  module Config
-    #
-    # This is a wrapper class of confstruct gem
-    # Configs.on "project" do
-    #   property1 "1"
-    #   property2 do
-    #     test "test12"
+    # This is a wrapper class of http://www.rubydoc.info/gems/confstruct/1.0.1 gem
+    # Usage: create a file with this code (more on the rubydoc above)
+    # -----------------------------------
+    #   Configs.on "project" do
+    #     property1 "1"
+    #     property2 do
+    #      test "test12"
+    #     end
+    #     property3 "3"
     #   end
-    #   property3 "3"
-    # end
-    # Configs.project.property2.test => will display 'test12'
     #
+    #   Configs.project.property2.test => will display 'test12'   
+    # 
+  module Config        
     extend self
 
     def on(name, &block)
@@ -35,7 +37,5 @@ module DevOn
     rescue NoMethodError => e
       raise "It seems that your configuration [#{name}.rb] is missing or has an uninitialized key: " + e.to_s
     end
-
-
   end
 end

@@ -1,1 +1,2 @@
+# paul: inherit the devOn/tasks, less code for you; add your own rake tasks bellow 
 require "devOn/tasks"

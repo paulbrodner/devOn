@@ -1,9 +1,11 @@
 require 'erb'
 
 module DevOn
+  
+  # render and generate files based on templates or string
   module Template
     require 'tempfile'
-
+  
     def self.from_string(string)
       ERB.new(string).result(binding)
     end

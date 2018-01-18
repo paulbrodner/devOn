@@ -1,6 +1,8 @@
 module Simple
   include DevOn
   Config.on "simple" do
-    shell "ls -la /vagrant"
+    custom do 
+      setting "custom-setting"
+    end
   end
 end

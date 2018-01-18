@@ -1,7 +1,6 @@
 language: ruby
 rvm:
   - 2.4.1
-
 sudo: required
-
-install: ./install.sh
+before_install: ./bin/setup
+install: bundle exec rake install:local

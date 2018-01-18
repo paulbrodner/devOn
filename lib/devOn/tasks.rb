@@ -4,10 +4,10 @@ require 'awesome_print'
 include Rake::DSL
 require 'devOn'
 
-ID_SCRIPTS = "scripts"
-ID_CONFIGS = "configs"
-ID_CONN = "connections"
-ID_NONE = "No config"
+ID_SCRIPTS  = "scripts"
+ID_CONFIGS  = "configs"
+ID_CONN     = "connections"
+ID_NONE     = "No config"
 
 
 namespace :scripts do
@@ -118,7 +118,7 @@ namespace :server do
 end
 
 namespace :db do
-  desc "Initi/Reinitialize db"
+  desc "Initialize/Reinitialize db"
   task :init do
     require 'devOn/server/db/base'
     puts DevOn::Server::DB.init!

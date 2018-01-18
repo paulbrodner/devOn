@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["paul.brodner@gmail.com"]
   
   spec.summary       = %q{Throw some pixie dust on test environments}
-  spec.description   = %q{Configure test environments: Vagrant files, Remote VMS, real servers based on configuration provided}
-  spec.homepage      = "http://paulbrodner.ro"
+  spec.description   = %q{Configure virtual machines from local computer or remote hosts based on Ruby scripts, via SSH}
+  spec.homepage      = "https://github.com/paulbrodner/devon"
 
   spec.files         = Dir['lib/**/*.*'] +  Dir['README*', 'LICENSE*', 'CODE_OF*'] +   Dir['structure/**/*']
   spec.bindir        = "bin"
@@ -37,4 +37,19 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'will_paginate', '~> 3.0.7'
   spec.add_dependency 'will_paginate-bootstrap', '~> 1.0.1'  
   spec.required_ruby_version = '>= 2.0.0'
+
+  spec.post_install_message = <<msg
+-------------------------------------------------
+Thank you for installing devOn!
+
+██████╗ ███████╗██╗   ██╗ ██████╗ ███╗   ██╗
+██╔══██╗██╔════╝██║   ██║██╔═══██╗████╗  ██║
+██║  ██║█████╗  ██║   ██║██║   ██║██╔██╗ ██║
+██║  ██║██╔══╝  ╚██╗ ██╔╝██║   ██║██║╚██╗██║
+██████╔╝███████╗ ╚████╔╝ ╚██████╔╝██║ ╚████║
+╚═════╝ ╚══════╝  ╚═══╝   ╚═════╝ ╚═╝  ╚═══╝
+                                by Paul Brodner
+Enjoy!
+-------------------------------------------------
+msg
 end

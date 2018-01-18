@@ -1,9 +1,10 @@
 #
-# Connection example script
+# Example script that will connect to a particular connection found in "connections" folder
 #
 module Install
   include DevOn
 
+  # paul: you can define custom scripts that will be executed based on the destination operating system
   if is_os OS_WIN
     Command.run_shell("echo 'from WIN OS'")
   else

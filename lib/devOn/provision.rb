@@ -1,5 +1,9 @@
 module DevOn
   module Provision
+    
+    #
+    # use the <filename> defined in "config" folder    
+    #
     def use_file(config, filename)
       return if config.name.eql? "default"
       raise "No configs files found for: #{config.name}" if !config.files
@@ -9,12 +13,11 @@ module DevOn
     end
 
     #
-    # check the OS type
+    # check the current OS type is the one set as parameter  
     #
     def is_os(os)
       $connection.os.eql? os
     end
-
     
     #
     # This will actually provision the VM machine using the configuration provided
@@ -24,6 +27,7 @@ module DevOn
 
       return if config.commands.nil?
 
+      # this will initialize the SSH tunnel based on the connection settings
       @tunnel = Tunnel.new($connection.settings.to_h)
       @errors = []
 
@@ -72,6 +76,7 @@ module DevOn
           end
         end
       end
+      
       if !@errors.empty?
         ap "Please correct the following ERRORS:"
         ap @errors
@@ -82,7 +87,7 @@ module DevOn
       @results
     end
 
-    private
+private
 
     def init_sftp
       catch_sftp_exception do
@@ -91,6 +96,7 @@ module DevOn
       return @sftp
     end
 
+    # catch the sftp exceptions thrown by the block code
     def catch_sftp_exception(&block)
       yield block
     rescue Exception => e
@@ -100,6 +106,7 @@ module DevOn
       raise e.backtrace
     end
 
+    # catch the sftp exceptions thrown by the block code
     def catch_ssh_exception(&block)
       yield block
     rescue Exception => e
@@ -109,6 +116,7 @@ module DevOn
       raise e.backtrace
     end
 
+    # check if script that we want to run is compatible in current configuration
     def check_compatibility!(config)
       return if config.compatibility.nil?
       unless config.compatibility.include?(ENV['scripts'])

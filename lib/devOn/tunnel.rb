@@ -19,9 +19,9 @@ module DevOn
       # configure connection based on Config provided
       #
       @hostname = config[:hostname]
-      @user = config[:username]
-      @port = config[:port]
-      @verbose = config[:verbose] || :info
+      @user     = config[:username]
+      @port     = config[:port]
+      @verbose  = config[:verbose] || :info
       @password = config[:password]
 
       puts "Using config: #{config.inspect}"
