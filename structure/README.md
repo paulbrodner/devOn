@@ -93,11 +93,11 @@ One interactive shell is executed.
 
 Let's check the existing one `0` when `Choose a file from scripts to use:` text is displayed and press ENTER.
 
->**Hint:**: for the file available at location `0` you can also press ENTER directly, no need to type `0` then ENTER.
+>**Hint:** for the file available at location `0` you can also press ENTER directly, no need to type `0` then ENTER.
 
 **b)** The interactive task will then display all available connections as we saw in previous paragraph. Type `0` and press ENTER again.
 
->**Hint:**: for the file available at location `0` you can also press ENTER directly, no need to type `0` then ENTER.
+>**Hint:** for the file available at location `0` you can also press ENTER directly, no need to type `0` then ENTER.
 
 Next a list of available configurations is displayed (i.e. what configuration should this tool use in combination with your script). 
 
