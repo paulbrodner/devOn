@@ -21,7 +21,7 @@ Throw some pixie dust on test environments !
 * ability to run scripts on your terminal (via Rake tasks) or from your web browser
 * ability to keep track of all scripts executed in browser and the output result
 * **agent-less**: no agents required  to be installed on remote machines, only ssh connection enabled
-* https://en.wikipedia.org/wiki/SFTP
+* ability to upload/download files using [SFTP](https://en.wikipedia.org/wiki/SFTP) protocol
 * ability to generate new project structure will all boilerplates in place 
 
 ## Installation
